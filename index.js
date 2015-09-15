@@ -37,15 +37,31 @@ function search(){
 //search();
 
 function parsePage(wikitext){
-  console.log("parsing");
-  var rePattern = new RegExp(/==? *Calendar *==?/);
-  var match = rePattern.exec(wikitext);
-if (match) {
-    console.log("match found at " + match.index);
-}
-}
+  var reCal = new RegExp(/==? *Calendar *==?/);
+  var reItem = new RegExp(/^\*[^\*]/m);
+  var reSection = new RegExp(/^==?[^=]/m);
 
+  // Check if page contains Calendar section
+  if (!reCal.test(wikitext)) {
+    return;
+  }
 
+  var calFlag = false;
+  var lines = wikitext.split('\n');
+  for(var i = 0; i <= lines.length; i++){
+    if( !calFlag && reCal.test(lines[i]) ){
+      calFlag = true;
+      //TODO: parse event data
+      //      get short link
+    }
+    else if( calFlag && reItem.test(lines[i]) ){
+      console.log(lines[i]);
+    }
+    else if ( calFlag && reSection.test(lines[i]) ){
+      calFlag = false;
+    }
+  }
+}
 
 function getPage(name){
   var params = {
