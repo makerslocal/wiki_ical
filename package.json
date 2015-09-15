@@ -1,0 +1,15 @@
+{
+  "name": "node_wiki_ical",
+  "version": "0.0.1",
+  "description": "Node app to search a wiki, and parse out calendar items.  Then create an ical feed.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "GPLv3",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "mediawiki": "0.0.14"
+  }
+}
