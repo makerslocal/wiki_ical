@@ -1,4 +1,6 @@
 var _ = require('lodash');
+var moment = require('moment');
+moment().format();
 var MediaWiki = require("mediawiki");
 var bot = new MediaWiki.Bot();
 bot.settings.endpoint = "https://256.makerslocal.org/wiki/api.php";
@@ -36,10 +38,23 @@ function search(){
 
 //search();
 
+//TODO: parse event data
+function parseEvent(wikievent){
+  console.log(wikievent);
+
+  var re = /^\* (.*) *: +(.*?)( at (.*))?$/;
+  var res = re.exec(wikievent);
+  var eventTime = res[1];
+  var eventName = res[2];
+
+  console.log("eventTime: " + eventTime);
+  console.log("eventName: " + eventName);
+}
+
 function parsePage(wikitext){
-  var reCal = new RegExp(/==? *Calendar *==?/);
-  var reItem = new RegExp(/^\*[^\*]/m);
-  var reSection = new RegExp(/^==?[^=]/m);
+  var reCal = /==? *Calendar *==?/;
+  var reItem = /^\*[^\*]/m;
+  var reSection = /^==?[^=]/m;
 
   // Check if page contains Calendar section
   if (!reCal.test(wikitext)) {
@@ -49,14 +64,16 @@ function parsePage(wikitext){
   var calFlag = false;
   var lines = wikitext.split('\n');
   for(var i = 0; i <= lines.length; i++){
+    // Found Calendar section
     if( !calFlag && reCal.test(lines[i]) ){
       calFlag = true;
-      //TODO: parse event data
-      //      get short link
+      //TODO: get short link
     }
+    // Find event
     else if( calFlag && reItem.test(lines[i]) ){
-      console.log(lines[i]);
+      parseEvent(lines[i]);
     }
+    // reset
     else if ( calFlag && reSection.test(lines[i]) ){
       calFlag = false;
     }
